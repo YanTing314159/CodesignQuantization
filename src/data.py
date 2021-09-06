@@ -1,0 +1,40 @@
+""" train and test dataset
+author baiyu
+https://github.com/weiaicunzai/pytorch-cifar100/blob/master/dataset.py
+"""
+import os
+import sys
+import pickle
+
+from skimage import io
+import matplotlib.pyplot as plt
+import numpy
+import torch
+from torch.utils.data import Dataset
+
+class CIFAR100(Dataset):
+    def __init__(self, path, mode, transform=None):
+        #if transform is given, we transoform data using
+        if mode == 'train':
+          with open(os.path.join(path, 'train'), 'rb') as cifar100:
+              self.data = pickle.load(cifar100, encoding='bytes')
+        elif mode == 'test': 
+          with open(os.path.join(path, 'test'), 'rb') as cifar100:
+              self.data = pickle.load(cifar100, encoding='bytes')
+        else:
+          print("Invalid data!")
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.data['fine_labels'.encode()])
+
+    def __getitem__(self, index):
+        label = self.data['fine_labels'.encode()][index]
+        r = self.data['data'.encode()][index, :1024].reshape(32, 32)
+        g = self.data['data'.encode()][index, 1024:2048].reshape(32, 32)
+        b = self.data['data'.encode()][index, 2048:].reshape(32, 32)
+        image = numpy.dstack((r, g, b))
+
+        if self.transform:
+            image = self.transform(image)
+        return label, image

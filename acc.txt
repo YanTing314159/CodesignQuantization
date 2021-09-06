@@ -1,0 +1,10 @@
+top-1 acc(%)
+resnet56
+ fp32 pretrained: 72.63
+ int8 default static quantize: 70.87
+ int8 default QAT(20 epoch): 72.16
+
+vgg16_bn
+ fp32 pretrained: 74.00
+ int8 default static quantize: 73.73
+ int8 default QAT(20 epoch): 73.86
